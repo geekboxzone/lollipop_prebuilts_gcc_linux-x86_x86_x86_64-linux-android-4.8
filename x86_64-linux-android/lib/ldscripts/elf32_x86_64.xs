@@ -43,7 +43,7 @@ SECTIONS
   .plt            : { *(.plt) *(.iplt) }
   .text           :
   {
-    *(.text.unlikely .text.*_unlikely)
+    *(.text.unlikely .text.*_unlikely .text.unlikely.*)
     *(.text.exit .text.exit.*)
     *(.text.startup .text.startup.*)
     *(.text.hot .text.hot.*)
@@ -90,15 +90,13 @@ SECTIONS
   {
     KEEP (*crtbegin*.o(.init_array))
     KEEP (*(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*)))
-    KEEP (*(.init_array))
-    KEEP (*(EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .ctors))
+    KEEP (*(.init_array EXCLUDE_FILE (*crtbegin.o *crtbegin*.o *crtend.o *crtend*.o ) .ctors))
   }
   .fini_array     :
   {
     KEEP (*crtbegin*.o(.fini_array))
     KEEP (*(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*)))
-    KEEP (*(.fini_array))
-    KEEP (*(EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .dtors))
+    KEEP (*(.fini_array EXCLUDE_FILE (*crtbegin.o *crtbegin*.o *crtend.o *crtend*.o ) .dtors))
   }
   .ctors          :
   {
@@ -161,6 +159,7 @@ SECTIONS
     *(LARGE_COMMON)
   }
   . = ALIGN(32 / 8);
+  . = SEGMENT_START("ldata-segment", .);
   .lrodata   ALIGN(CONSTANT (MAXPAGESIZE)) + (. & (CONSTANT (MAXPAGESIZE) - 1)) :
   {
     *(.lrodata .lrodata.* .gnu.linkonce.lr.*)
@@ -198,7 +197,7 @@ SECTIONS
   /* DWARF 2 */
   .debug_info     0 : { *(.debug_info .gnu.linkonce.wi.*) }
   .debug_abbrev   0 : { *(.debug_abbrev) }
-  .debug_line     0 : { *(.debug_line) }
+  .debug_line     0 : { *(.debug_line .debug_line.* .debug_line_end ) }
   .debug_frame    0 : { *(.debug_frame) }
   .debug_str      0 : { *(.debug_str) }
   .debug_loc      0 : { *(.debug_loc) }

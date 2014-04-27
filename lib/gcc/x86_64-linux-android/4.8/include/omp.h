@@ -39,8 +39,8 @@ typedef struct
 
 typedef struct
 {
-  unsigned char _x[16] 
-    __attribute__((__aligned__(8)));
+  unsigned char _x[12] 
+    __attribute__((__aligned__(4)));
 } omp_nest_lock_t;
 #endif
 
